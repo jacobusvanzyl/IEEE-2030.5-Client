@@ -301,7 +301,7 @@ void net_open (UdpPort *p, Address *address);
     @param addr is an IPv6 multicast address
     @param loop selects whether to receive our own multicasts
 */
-void net_join_group (UdpPort *p, const char *addr, int loop);
+void net_join_group (UdpPort *p, const Address *addr, int loop);
 
 /** @} */
 

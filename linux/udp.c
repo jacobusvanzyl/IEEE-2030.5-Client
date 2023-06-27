@@ -43,6 +43,6 @@ void net_open (UdpPort *p, Address *address) {
     print_error ("upd_open, bind");
 }
 
-void net_join_group (UdpPort *p, const char *addr, int loop) {
+void net_join_group (UdpPort *p, const Address *addr, int loop) {
   multicast_join (p->pe.socket, addr, loop);
 }

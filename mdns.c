@@ -18,11 +18,18 @@ Address multicast;
 UdpPort *mdns_open (char *name, int loop) {
   UdpPort *mdns = new_udp_port (1500); 
   Address addr; char zero[16] = {0};
-  const char mcast[16] = "\xff\x05\0\0\0\0\0\0\0\0\0\0\0\0\0\xfb";
+  // TODO use the IPv4 address 224.0.0.251
+  //const char mcast[4] = {224,0,0,251};//(224<<4)+0+0+251;
+  const uint32_t mcast = (224<<24) + 0 + 0 + 251;
+  //const char mcast[16] = "\xff\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\xfb";
   net_select (interface_index (name));
-  ipv6_address (&multicast, mcast, MDNS_PORT);
-  net_open (mdns, ipv6_address (&addr, zero, MDNS_PORT));
-  net_join_group (mdns, mcast, loop);
+  ipv4_address(&multicast, mcast, MDNS_PORT);
+  //ipv6_address (&multicast, mcast, MDNS_PORT);
+  //net_open (mdns, ipv6_address (&addr, zero, MDNS_PORT));
+  printf("Net open\n");
+  net_open (mdns, ipv4_address (&addr, 0, MDNS_PORT));
+  printf("Net join\n");
+  net_join_group (mdns, &multicast, loop);
   return mdns;
 }
 

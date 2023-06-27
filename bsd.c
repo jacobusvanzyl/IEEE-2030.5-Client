@@ -98,7 +98,34 @@ int bsd_connected (int socket) {
   return error == 0;
 }
 
-void multicast_join (int socket, const char *addr, int loop) {
+void multicast_join (int socket, const Address *addr, int loop) {
+    struct ip_mreqn group; int value = 0;
+    // set the local interface
+    //  if_index = interface_index (mdns_socket);
+    // add this process to the multicast group
+    memcpy (&group.imr_multiaddr, &addr->in.sin_addr,
+            sizeof (struct in_addr));
+    group.imr_ifindex = global_if_index;
+    if (setsockopt (socket, IPPROTO_IP, IP_MULTICAST_IF,
+                (void *)&group, sizeof (group)) < 0)
+        print_error ("setsockopt IP_MULTICAST_IF");    
+    if (setsockopt (socket, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+                (void *)&group, sizeof(group)) < 0)
+        print_error ("setsockopt IP_ADD_MEMBERSHIP error");
+    // recieve our own multicasts?
+    setsockopt (socket, IPPROTO_IP, IP_MULTICAST_LOOP,
+            (void *)&loop, sizeof(loop));
+    // set the time to live
+    value = 255;
+    if (setsockopt (socket, IPPROTO_IP, IP_MULTICAST_TTL,
+                (void *)&value, sizeof(value)) < 0)
+        print_error ("setsockopt IP_MULTICAST_TTL error");
+}
+
+/**
+ * IPv6 multicast join
+ */
+void multicast_join6 (int socket, const char *addr, int loop) {
   struct ipv6_mreq group; int value = 0;
   // set the local interface
   //  if_index = interface_index (mdns_socket);
