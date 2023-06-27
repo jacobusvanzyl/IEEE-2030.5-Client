@@ -276,8 +276,8 @@ void process_answers (char *data, int count) {
 	if (h) host_aaaa (h, data, length); break;
       }
       data = rr_next (data, length);
-    } return;
-  }
+    }
+  } return;
 }
 
 // process a DNS-SD packet
