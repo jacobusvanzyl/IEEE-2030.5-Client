@@ -101,7 +101,8 @@ void se_discover (int server, int qu) { int i = 0;
     if (server & 1) { char *n = name;
       if (i < 13) // sub type request
 	n += sprintf (name, ".%s._sub", service_name[i]);
-      strcpy (n, "._smartenergy._tcp.site");
+      strcpy (n, "._smartenergy._tcp.local");
+      //strcpy (n, "._services._dns-sd._udp.local");
       write_counted (name);
       packet = dnssd_question (packet, name, PTR_RECORD, qu);
     }
